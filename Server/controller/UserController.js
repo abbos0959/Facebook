@@ -1,5 +1,6 @@
 const UserModel = require("../models/userModel");
 const { validateEmail, validateLength, validateUserName } = require("../helpers/validator");
+const generateToken = require("../helpers/token");
 const bcrypt = require("bcrypt");
 
 const register = async (req, res) => {
@@ -38,7 +39,7 @@ const register = async (req, res) => {
       }
       const hashPassword = await bcrypt.hash(password, 12);
       let temperUserName = first_name + last_name;
-      let newUserName =  await validateUserName(temperUserName);
+      let newUserName = await validateUserName(temperUserName);
 
       const user = await new UserModel({
          first_name,
@@ -52,6 +53,9 @@ const register = async (req, res) => {
          gender,
          username: newUserName,
       }).save();
+
+      const emailverificationtoken = generateToken({ id: user._id.toString() }, "30m");
+
       res.status(200).json({
          user,
          message: "user yaratildi",
