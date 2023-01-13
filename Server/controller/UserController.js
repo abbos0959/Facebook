@@ -1,8 +1,10 @@
 const UserModel = require("../models/userModel");
 const { validateEmail, validateLength, validateUserName } = require("../helpers/validator");
 const generateToken = require("../helpers/token");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendverificationEmail = require("../helpers/mailer");
+const userModel = require("../models/userModel");
 
 const register = async (req, res) => {
    try {
@@ -78,4 +80,64 @@ const register = async (req, res) => {
    }
 };
 
-module.exports = { register };
+const activateAcount = async (req, res) => {
+   try {
+      const { token } = req.body;
+      const user = jwt.verify(token, "secret");
+      const check = await UserModel.findById(user.id);
+      console.log(check.verified);
+
+      console.log(user);
+
+      if (check.verified === false) {
+         await userModel.findByIdAndUpdate(user.id, { verified: true });
+         return res.status(200).json({ message: "sizning emailingiz muvaffaqiyatli tasdiqlandi" });
+      } else {
+         return res.status(200).json({ message: "sizning emailingiz allaqachon tasdiqlangan" });
+      }
+   } catch (error) {
+      res.status(500).json({
+         message: error.message,
+      });
+   }
+};
+
+const login = async (req, res) => {
+   try {
+      const { email, password } = req.body;
+
+      const usert = await userModel.findOne({ email });
+
+      if (!usert) {
+         return res.status(400).json({
+            message: "bunday user mavjud emas",
+         });
+      }
+
+      const check = await bcrypt.compare(password, usert.password);
+
+      if (!check) {
+         return res.status(400).json({
+            message: "bunday user mavjud emas password",
+         });
+      }
+      const token = generateToken({ id: usert._id.toString() }, "7d");
+
+      res.send({
+         id: usert._id,
+         username: usert.username,
+         picture: usert.picture,
+         first_name: usert.first_name,
+         last_name: usert.last_name,
+         token: token,
+         verified: usert.verified,
+         message: "tizimga muvaffaqiyatli kirdingiz ",
+      });
+   } catch (error) {
+      res.status(500).json({
+         message: "login xatoligi",
+      });
+   }
+};
+
+module.exports = { register, activateAcount, login };
