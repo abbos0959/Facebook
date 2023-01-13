@@ -10,8 +10,6 @@ const { EMAIL, MAILING_ID, MAILING_SECRET, MAILING_REFFRESH, MAILING_ACCESS } = 
 const auth = new OAuth2(MAILING_ID, MAILING_SECRET, MAILING_REFFRESH, outh_link);
 
 const sendverificationEmail = (email, name, url) => {
-   console.log("BU EMAILLLLLLLLLLLLLLLL", EMAIL);
-
    auth.setCredentials({
       refresh_token: MAILING_REFFRESH,
    });
