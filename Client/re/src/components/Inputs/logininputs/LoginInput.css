@@ -52,3 +52,21 @@
    position: absolute;
    top: 50px;
 }
+.input_wrap input:hover {
+   border-color: var(--blue-color);
+}
+.error_arrow_left {
+   border-left: 10px solid #b94a48;
+   border-top: 10px solid transparent;
+   border-bottom: 10px solid transparent;
+   position: absolute;
+   left: 18.81rem;
+   top: 10px;
+}
+
+.input_error_desctop {
+   position: absolute;
+   width: 300px;
+   top: -3px;
+   left: -19.5rem;
+}
