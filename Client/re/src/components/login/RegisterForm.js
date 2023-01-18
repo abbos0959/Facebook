@@ -4,22 +4,71 @@ import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import { RegisterInput } from "../Inputs/registerInput/RegisterInput";
 export const RegisterForm = () => {
+   const oy = [
+      "Yanvar",
+      "Fevral",
+      "Mart",
+      "Aprel",
+      "May",
+      "Iyun",
+      "Iyul",
+      "Avgust",
+      "Sentabr",
+      "Oktabr",
+      "Noyabr",
+      "Dekabr",
+   ];
+   const mon = new Date();
+
    const registerValue = {
       first_name: "",
       last_name: "",
       email: "",
       password: "",
-      bYear: "",
-      bMonth: "",
-      bDay: "",
+      bYear: new Date().getFullYear(),
+      bMonth: new Date().getMonth() + 1,
+      bDay: new Date().getDate(),
       gender: "",
    };
    const [user, setUser] = useState(registerValue);
+   const { first_name, last_name, email, password, bYear, bMonth, bDay, gender } = user;
 
    const handleRegisterChange = (e) => {
       const { name, value } = e.target;
       setUser({ ...user, [name]: value });
+      console.log(value, name, "ssssssssssssssssss");
    };
+
+   const year = Array.from(new Array(108), (val, index) => bYear - index);
+   const month = Array.from(new Array(12), (val, i) => 1 + i);
+
+   const getDays = () => {
+      return new Date(bYear, bMonth, 0).getDate();
+   };
+   const Days = Array.from(new Array(getDays()), (val, index) => 1 + index);
+
+   const registerValidate = Yup.object({
+      first_name: Yup.string()
+         .required("Ism  kiritishingiz shart")
+         .min(2, "Ism minimal  2 harfdan kam bo'lmasligi kerak")
+         .max(30, "Ism maximal  30 harfdan oshmasligi kerak")
+         .matches(/^[aA-zZ]+$/, "Ismda faqat harflar ishtirok etishi kerak"),
+      last_name: Yup.string()
+         .required("Familiya  kiritishingiz shart")
+         .min(2, "Familiya minimal  2 harfdan kam bo'lmasligi kerak")
+         .matches(/^[aA-zZ]+$/, "Familiyada faqat harflar ishtirok etishi kerak")
+         .max(30, "Familiya maximal  30 harfdan oshmasligi kerak"),
+
+      email: Yup.string()
+         .required("Email yoki telefon  raqam kiriting")
+         .email("bu email yaroqsiz")
+         .max(100),
+      password: Yup.string()
+         .required("Siz parol kiritishingiz shart")
+         .max(25, "Parolning maximal uzunligi 25 belgidan oshmasligi kerak")
+         .min(4, "Parolning minimal uzunligi 4 belgidan kam bo'lmasligi kerak"),
+   });
+
    return (
       <div className="blur">
          <div className="register">
@@ -29,7 +78,11 @@ export const RegisterForm = () => {
                <span>Bu tez va oson</span>
             </div>
 
-            <Formik initialValues={registerValue}>
+            <Formik
+               enableReinitialize
+               initialValues={registerValue}
+               validationSchema={registerValidate}
+            >
                {(formik) => (
                   <Form className="register_form">
                      <div className="reg_line">
@@ -67,14 +120,26 @@ export const RegisterForm = () => {
                            Tug'ilgan sana <i className="info_icon"></i>
                         </div>
                         <div className="reg_grid">
-                           <select name="bDay">
-                              <option value="">12</option>
+                           <select name="bDay" value={bDay} onChange={handleRegisterChange}>
+                              {Days.map((val, i) => (
+                                 <option key={i} value={val}>
+                                    {val}
+                                 </option>
+                              ))}
                            </select>
-                           <select name="bMonth">
-                              <option value="">12</option>
+                           <select name="bMonth" value={bMonth} onChange={handleRegisterChange}>
+                              {month.map((val, i) => (
+                                 <option key={i} value={val}>
+                                    {val}
+                                 </option>
+                              ))}
                            </select>
-                           <select name="bYear">
-                              <option value="">12</option>
+                           <select name="bYear" value={bYear} onChange={handleRegisterChange}>
+                              {year.map((val, i) => (
+                                 <option value={val} key={i}>
+                                    {val}
+                                 </option>
+                              ))}
                            </select>
                         </div>
                      </div>

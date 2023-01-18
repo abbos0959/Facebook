@@ -9,7 +9,7 @@ export const LoginInput = ({ placeholder, bottom, ...props }) => {
    const desctopView = useMediaQuery({
       query: "(min-width:850px)",
    });
-   console.log(desctopView);
+
    //  console.log(field, "ssssssssssssssssss");
    //  console.log(bottom, "botttttttttttttttttttttttt");
 
