@@ -31,12 +31,14 @@ export const RegisterForm = () => {
       gender: "",
    };
    const [user, setUser] = useState(registerValue);
+   const [dateError, setDateError] = useState("");
+
    const { first_name, last_name, email, password, bYear, bMonth, bDay, gender } = user;
 
    const handleRegisterChange = (e) => {
       const { name, value } = e.target;
       setUser({ ...user, [name]: value });
-      console.log(value, name, "ssssssssssssssssss");
+      // console.log(value, name, "ssssssssssssssssss");
    };
 
    const year = Array.from(new Array(108), (val, index) => bYear - index);
@@ -82,6 +84,18 @@ export const RegisterForm = () => {
                enableReinitialize
                initialValues={registerValue}
                validationSchema={registerValidate}
+               onSubmit={(values, actions) => {
+                  let current_date = new Date();
+                  let picked_data = new Date(bYear, bMonth, bDay);
+                  let atleast14 = new Date(1970 + 14, 0, 1);
+                  let noMoreThan70 = new Date(1970 + 70, 0, 1);
+
+                  if (current_date - picked_data < atleast14) {
+                     setDateError(
+                        "Iltimos, haqiqiy tugʻilgan kuningizdan foydalanganingizga ishonch hosil qiling"
+                     );
+                  }
+               }}
             >
                {(formik) => (
                   <Form className="register_form">
@@ -171,7 +185,9 @@ export const RegisterForm = () => {
                         </div>
                      </div>
                      <div className="reg_btn_wrapper">
-                        <button className="blue_btn open_signup">Ro'yhatdan o'tish</button>
+                        <button type="submit" className="blue_btn open_signup">
+                           Ro'yhatdan o'tish
+                        </button>
                      </div>
                   </Form>
                )}

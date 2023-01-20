@@ -2,7 +2,7 @@
    position: relative;
    width: 320px;
    display: flex;
-   
+
    flex-direction: column;
    align-items: center;
 }
@@ -64,10 +64,29 @@
    left: 18.81rem;
    top: 10px;
 }
+.error_arrow_right {
+   border-right: 10px solid #b94a48;
+   border-top: 10px solid transparent;
+   border-bottom: 10px solid transparent;
+   position: absolute;
+   left: -10px;
+   top: 10px;
+}
 
 .input_error_desctop {
    position: absolute;
    width: 300px;
    top: -3px;
    left: -19.5rem;
+}
+
+.register_input_wrap {
+   width: 100% !important;
+}
+.register_input_wrap input {
+   /* width: 300px; */
+   background: var(--bg-secondary);
+}
+.register_input_wrap .input_error {
+   max-width: 300px;
 }
